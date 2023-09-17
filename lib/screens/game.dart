@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -15,6 +17,8 @@ class _GameScreenState extends State<GameScreen> {
   int oScore = 0;
   int xScore = 0;
   int filledBoxes = 0;
+  bool winnerFound = false;
+  List<int> matchedIndexes = [];
   static var customFontWhite = GoogleFonts.oxygen(
     textStyle: const TextStyle(
       color: Colors.white,
@@ -98,7 +102,9 @@ class _GameScreenState extends State<GameScreen> {
                               width: 5,
                               color: Colors.deepPurple,
                             ),
-                            color: Colors.orange.shade400),
+                            color: matchedIndexes.contains(index)
+                                ? Colors.blueAccent
+                                : Colors.orange.shade400),
                         child: Center(
                           child: Text(
                             displayXO[index],
@@ -133,7 +139,7 @@ class _GameScreenState extends State<GameScreen> {
                       onPressed: () {
                         newGame();
                       },
-                      child: Text('Start a new Game'),
+                      child: Text('START A NEW GAME'),
                     ),
                   ],
                 ),
@@ -156,21 +162,25 @@ class _GameScreenState extends State<GameScreen> {
       displayXO = ['', '', '', '', '', '', '', '', ''];
       result = '';
       filledBoxes = 0;
+      winnerFound = false;
+      matchedIndexes = [];
     });
   }
 
   void tapped(int index) {
-    setState(() {
-      if (oTurn && displayXO[index] == '') {
-        displayXO[index] = 'O';
-        filledBoxes++;
-      } else if (displayXO[index] == '') {
-        displayXO[index] = 'X';
-        filledBoxes++;
-      }
-      oTurn = !oTurn;
-      checkwinner();
-    });
+    if (winnerFound == false) {
+      setState(() {
+        if (oTurn && displayXO[index] == '') {
+          displayXO[index] = 'O';
+          filledBoxes++;
+        } else if (displayXO[index] == '') {
+          displayXO[index] = 'X';
+          filledBoxes++;
+        }
+        oTurn = !oTurn;
+        checkwinner();
+      });
+    }
   }
 
   void checkwinner() {
@@ -180,7 +190,9 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[0] != '') {
       setState(() {
         result = 'Player ${displayXO[0]} Wins!';
+        winnerFound = true;
         updateScore(displayXO[0]);
+        matchedIndexes.addAll([0, 1, 2]);
       });
     }
     //check 2nd row//
@@ -189,7 +201,9 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[3] != '') {
       setState(() {
         result = 'Player ${displayXO[3]} Wins!';
+        winnerFound = true;
         updateScore(displayXO[3]);
+        matchedIndexes.addAll([3, 4, 5]);
       });
     }
     //check 3rd row//
@@ -198,7 +212,9 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[6] != '') {
       setState(() {
         result = 'Player ${displayXO[6]} Wins!';
+        winnerFound = true;
         updateScore(displayXO[6]);
+        matchedIndexes.addAll([6, 7, 8]);
       });
     }
     //check 1st column//
@@ -207,7 +223,9 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[0] != '') {
       setState(() {
         result = 'Player ${displayXO[0]} Wins!';
+        winnerFound = true;
         updateScore(displayXO[0]);
+        matchedIndexes.addAll([0, 3, 6]);
       });
     }
     //check 2nd column//
@@ -216,7 +234,9 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[1] != '') {
       setState(() {
         result = 'Player ${displayXO[1]} Wins!';
+        winnerFound = true;
         updateScore(displayXO[1]);
+        matchedIndexes.addAll([1, 4, 7]);
       });
     }
     //check 3rd column//
@@ -225,7 +245,9 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[2] != '') {
       setState(() {
         result = 'Player ${displayXO[2]} Wins!';
+        winnerFound = true;
         updateScore(displayXO[2]);
+        matchedIndexes.addAll([2, 5, 8]);
       });
     }
 
@@ -235,7 +257,9 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[0] != '') {
       setState(() {
         result = 'Player ${displayXO[0]} Wins!';
+        winnerFound = true;
         updateScore(displayXO[0]);
+        matchedIndexes.addAll([0, 4, 8]);
       });
     }
 
@@ -245,7 +269,9 @@ class _GameScreenState extends State<GameScreen> {
         displayXO[2] != '') {
       setState(() {
         result = 'Player ${displayXO[2]} Wins!';
+        winnerFound = true;
         updateScore(displayXO[2]);
+        matchedIndexes.addAll([2, 4, 6]);
       });
     } else if (filledBoxes == 9) {
       setState(() {
